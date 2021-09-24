@@ -20,10 +20,10 @@ return {
   stats: 'errors-only', // 显示日志 ：只在发生错误时输出 默认是“verbose”全部输出
   devtool: 'inline-source-map', // 用于开发环境模式下源映射sourcemap使用
   // devtool: 'source-map' // 生产环境下开启sourcemap
-  devServer: { // 监听功能：修改配置文件，告诉 dev server，从什么位置查找文件
-    contentBase: './dist',
-    hot: true
-  },
+  // devServer: { // 监听功能：修改配置文件，告诉 dev server，从什么位置查找文件
+  //   contentBase: './dist',
+  //   hot: true
+  // },
   output: {
     // filename: 'bundle.js',
     filename: '[name].bundle.js',
@@ -82,7 +82,8 @@ return {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'jinyan': 4, // 在项目代码中定义全局变量，就可以在src代码中可以直接访问jinyan这个变量为true,
-      // 'process.env.NODE_ENV': 5 // 在这显示设置时，就会覆盖掉 webpack初始化这个字符串属性的mode值
+      'process.env.NODE_ENV': JSON.stringify('jinyan')
+      // 在这显示设置时，就会覆盖掉 webpack初始化这个字符串属性的mode值,设字符串为值会编译时报错没有这个变量，解决方案用JSON.stringify序列化以下即可
     }),
     new webpack.ProvidePlugin({
       // 我们本质上所做的，就是告诉 webpack: 如果你遇到了至少一处用到 _ 变量的模块实例，那请你将 lodash package 引入进来，并将其提供给需要用到它的模块。

@@ -504,11 +504,28 @@ output: {
     publicPath: '/'// 公共路径若写'www.baidu.com/' ===> 则加载最终脚本文件时就要从'www.baidu.com/app.js' 来寻找资源了，若设成‘/’，则就在dist目录下根路径下寻找appjs脚本
   },
 ```
-
 #### 基于环境设置
-
 #### 在运行时设置
+通过运行时设置 __webpack_public_path__ 变量即可自动同步到output中的publicPath属性上
+#### 以下是对资源使用 CDN 和 hash 的复杂示例：
+```js
+// 以下是对资源使用 CDN 和 hash 的复杂示例：
 
+config.js
+
+module.exports = {
+  //...
+  output: {
+    path: '/home/proj/cdn/assets/[hash]',
+    publicPath: 'http://cdn.example.com/assets/[hash]/'
+  }
+};
+
+// 如果在编译时，不知道最终输出文件的 publicPath 是什么地址，则可以将其留空，并且在运行时通过入口起点文件中的 __webpack_public_path__ 动态设置。
+__webpack_public_path__ = myRuntimePublicPath;
+
+// 应用程序入口的其余部分
+```
 ### 集成
 
 首先，我们要消除一个常见的误解。webpack 是一个模块打包工具(module bundler)（例如，Browserify 或 Brunch）。而不是一个任务执行工具(task runner)（例如，Make, Grunt 或者 Gulp ）。任务执行工具用来自动化处理常见的开发任务，例如，lint(代码检测)、build(构建)、test(测试)。相比模块打包工具，任务执行工具则聚焦在偏重上层的问题上面。你仍然可以得益于这种用法：使用上层的工具，而将打包部分的问题留给 webpack。
