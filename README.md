@@ -101,7 +101,7 @@ export default {
 > 的行为。然而，与预期相反，无法在构建脚本 webpack.config.js 中，将 process.env.NODE_ENV 设置为 "production"，
 
 > 添加了这个插件后：任何位于 /src 的浏览器环境下本地代码都可以关联到 process.env.NODE_ENV 环境变量，都可以读取到这个变量；src外的根目录下配置文件node环境下执行的如webpack配置文件等是取不到由插件定义的全局变量的。
-
+- **思考**：用cross-env包时候，可以直接写NODE_ENV变量直接process.env.NODE_ENV访问，编译阶段src文件夹下都是可以直接访问到，`"dev": "cross-env NODE_ENV=development webpack"`
 - 如果要根据 webpack.config.js 中的 mode 变量更改打包行为，则必须将配置导出为一个函数，而不是导出为一个对象：
 ```js
 var config = {
