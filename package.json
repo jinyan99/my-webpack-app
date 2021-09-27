@@ -7,7 +7,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:config": "webpack --progress --config webpack.config.js --env.NODE_ENV=local --env.jinyan",
+    "build:config": "webpack --progress --profile --config webpack.config.js --env.NODE_ENV=local --env.jinyan --custom=local --json > compilation-stats.json",
     "build": "webpack --progress --config webpack.prod.js",
     "watch": "webpack --watch",
     "start:devserver": "webpack-dev-server --open --config webpack.dev.js",

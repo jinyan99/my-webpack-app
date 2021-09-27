@@ -20,8 +20,14 @@
     - webpack-dev-server 在编译之后不会写入到任何输出文件如dist目录中。而是将 bundle 文件保留在内存中，然后将它们 serve 到 server 中，就好像它们是挂载在 server 根路径上的真实文件一样。
     - 如果你的页面希望在其他不同路径中找到 bundle 文件，则可以通过 dev server 配置中的 publicPath 选项进行修改。
     - ⚠️：这个版本可能不太合适，用这个插件会报错
-  - webpack-dev-middleware: 是个封装器(wrapper)，它可以把 webpack 处理过的文件发送到一个 server。 webpack-dev-server 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例
+  - webpack-dev-middleware: 是个封装器(wrapper)，**作用就是实现打包结果在内存中**；它可以把 webpack 处理过的文件发送到一个 server。 webpack-dev-server 在内部使用了它，然而它也可以作为一个单独的 package 来使用，以便根据需求进行更多自定义设置。下面是一个 webpack-dev-middleware 配合 express server 的示例(值得一提的是，被 webpack-dev-server 及众多其他包依赖的 webpack-dev-middleware 就是通过自定义文件系统这种方式如可以使用 memory-fs 替换默认的 outputFileSystem，以将文件写入到内存中，而不是写入到磁盘；，将你的文件神秘地隐藏起来，但却仍然可以用它们为浏览器提供服务！)
     - 缺点：有内容修改时也不会自动刷新浏览器
+
+#### 概念解析
+
+- **webpack-dev-middleware**：是一个容器，它的作用是将webpack处理后的文件传递给server（webpack-dev-middleware 依赖于memory-fs，它将 webpack 原本的 outputFileSystem 替换成了MemoryFileSystem 实例，这样webpack编译的结果是放置在内存中而不是直接生成文件）。webpack-dev-server也是通过webpack-dev-middleware实现，同时，webpack-dev-middleware本身可以作为一个单独的包来使用。
+- **webpack-hot-middleware**： 实现热更新必须使用webpack-hot-middleware插件，该插件通过webpack的HMR API，浏览器和服务器之间建立连接并接收更新。它只专注于webpack和浏览器之间的通信机制。
+
 
 ### 模块热替换
 
@@ -95,6 +101,27 @@ export default {
 > 的行为。然而，与预期相反，无法在构建脚本 webpack.config.js 中，将 process.env.NODE_ENV 设置为 "production"，
 
 > 添加了这个插件后：任何位于 /src 的浏览器环境下本地代码都可以关联到 process.env.NODE_ENV 环境变量，都可以读取到这个变量；src外的根目录下配置文件node环境下执行的如webpack配置文件等是取不到由插件定义的全局变量的。
+
+- 如果要根据 webpack.config.js 中的 mode 变量更改打包行为，则必须将配置导出为一个函数，而不是导出为一个对象：
+```js
+var config = {
+  entry: './app.js'
+  //...
+};
+
+module.exports = (env, argv) => {
+
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+  }
+
+  if (argv.mode === 'production') {
+    //...
+  }
+
+  return config;
+};
+```
 
 - 下面webpack提供的env环境变量设置 是只能在编译时配置文件中能取到，在src文件下是取不到的，，src文件下只能取到node提供的process中env的NODE_ENV值，两者是不一样的
 
@@ -336,6 +363,27 @@ module.exports = env => {
       path: path.resolve(__dirname, 'dist')
     }
   };
+};
+
+
+// 如果要根据 webpack.config.js 中的 mode 变量更改打包行为，则必须将配置导出为一个函数，而不是导出为一个对象 
+// 如 `webpack --mode=production`
+var config = {
+  entry: './app.js'
+  //...
+};
+// 这个argv参数是webpack命令行中输入的所有参数的一个集合，有env值也有自定义的值 custom，都能在编译阶段能获取到的
+module.exports = (env, argv) => {
+
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+  }
+
+  if (argv.mode === 'production') {
+    //...
+  }
+
+  return config;
 };
 ```
 

@@ -3,8 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
-module.exports = (env) => {
-  console.log(env.NODE_ENV,'7看env', process.env)
+module.exports = (env, args) => {
+  console.log(env.NODE_ENV,'7看env', args) // args含webpack命令行执行时所有传入参数
 return {
   // mode: 'development', // 设置它确保为生成的dist下bundle是未压缩版本
   mode: 'production',
@@ -26,7 +26,7 @@ return {
   // },
   output: {
     // filename: 'bundle.js',
-    filename: '[name].bundle.js',
+    filename: '[name].bundle.js', // [name]就是入口文件名app这个属性key
     path: path.resolve(__dirname, 'dist'),// 实质上，发送到 output.path 目录的每个文件，都将从 output.publicPath 位置引用。默认/ 就是从dist的/根路径下引用寻找资源
     // 以确保起devServer服务时候 文件资源能够正确地 serve 在 http://localhost:3000 下，稍后我们会指定 port number(端口号)。接下来是设置自定义 express server：
     publicPath: '/'
@@ -74,8 +74,11 @@ return {
       }
     ]
   },
+  // colors: {
+  //   green: '\u001b[32m',
+  // },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(), // 每次构建前清理 /dist 文件夹
     new HtmlWebpackPlugin({
       title: '管理输出'
     }),
