@@ -78,7 +78,7 @@ return {
   //   green: '\u001b[32m',
   // },
   plugins: [
-    new CleanWebpackPlugin(), // 每次构建前清理 /dist 文件夹
+    new CleanWebpackPlugin(), // 每次构建前清理 /dist 文件夹，清理文件夹内容，不删除文件夹
     new HtmlWebpackPlugin({
       title: '管理输出'
     }),

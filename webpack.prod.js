@@ -5,9 +5,9 @@ module.exports = merge(common, {
    mode: 'production',
    devtool: 'source-map',
    optimization: {
-    //  splitChunks: {
+    //  splitChunks: { // 删除各个模块的重复依赖项如lodash引用啥的
     //    chunks: 'all'
-    //  }
+    //  },
     runtimeChunk: 'single', // 运行时代码分离 作内容hash缓存优化
     splitChunks: {
       cacheGroups: {
@@ -16,7 +16,8 @@ module.exports = merge(common, {
           name: 'vendors',
           chunks: 'all'
         }
-      }
+      },
+      // chunks: 'all' 
     }
    }
  });
