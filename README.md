@@ -132,6 +132,7 @@
 
 - **真正运行** tree shaking 还需要 ModuleConcatenationPlugin。通过 mode: "production" 可以添加此插件。如果你没有使用 mode 设置，记得手动添加 ModuleConcatenationPlugin。bundleq全部压缩成编码了
 
+> webpack4只要开启production模式就自动配置了摇树，不用额外配置了，开发模式下想要摇树还得通过压缩插件
 
 ### 生产环境
 
