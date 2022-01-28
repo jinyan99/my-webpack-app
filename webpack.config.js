@@ -6,14 +6,14 @@ const webpack = require('webpack');
 module.exports = (env, args) => {
   console.log(env.NODE_ENV,'7看env', args) // args含webpack命令行执行时所有传入参数
 return {
-  // mode: 'development', // 设置它确保为生成的dist下bundle是未压缩版本
-  mode: 'production',
+  mode: 'development', // 设置它确保为生成的dist下bundle是未压缩版本
+  // mode: 'production',
   // optimization: { // 优化选项
   //   usedExports: true // 意思就是我们去查看哪些导出的模块被使用，然后再进行打包,会在打的包中未使用的exports代码块处作出特定标记，供摇树使用
   // },
   // entry: './src/index.js',
   entry: {
-    app: './src/index.js',
+    app: './src/test1.js',
     // print: './src/print.js' 已经在indexjs等模块调用它的化，就不用在入口处定义它了
 
   },
@@ -82,16 +82,16 @@ return {
     new HtmlWebpackPlugin({
       title: '管理输出'
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-      'jinyan': 4, // 在项目代码中定义全局变量，就可以在src代码中可以直接访问jinyan这个变量为true,
-      'process.env.NODE_ENV': JSON.stringify('jinyan')
-      // 在这显示设置时，就会覆盖掉 webpack初始化这个字符串属性的mode值,设字符串为值会编译时报错没有这个变量，解决方案用JSON.stringify序列化以下即可
-    }),
-    new webpack.ProvidePlugin({
-      // 我们本质上所做的，就是告诉 webpack: 如果你遇到了至少一处用到 _ 变量的模块实例，那请你将 lodash package 引入进来，并将其提供给需要用到它的模块。
-      // _: 'lodash'// 赋给_为全局变量
-      join: ["lodash", "join"], // 暴漏模块的单个导出 赋在全局作用域内可直接使用join------> 这样就能很好的与 tree shaking 配合，将 lodash library 中的其余没有用到的导出去除。
-    }),
+    // new webpack.HotModuleReplacementPlugin(),
+    // new webpack.DefinePlugin({
+    //   'jinyan': 4, // 在项目代码中定义全局变量，就可以在src代码中可以直接访问jinyan这个变量为true,
+    //   'process.env.NODE_ENV': JSON.stringify('jinyan')
+    //   // 在这显示设置时，就会覆盖掉 webpack初始化这个字符串属性的mode值,设字符串为值会编译时报错没有这个变量，解决方案用JSON.stringify序列化以下即可
+    // }),
+    // new webpack.ProvidePlugin({
+    //   // 我们本质上所做的，就是告诉 webpack: 如果你遇到了至少一处用到 _ 变量的模块实例，那请你将 lodash package 引入进来，并将其提供给需要用到它的模块。
+    //   // _: 'lodash'// 赋给_为全局变量
+    //   join: ["lodash", "join"], // 暴漏模块的单个导出 赋在全局作用域内可直接使用join------> 这样就能很好的与 tree shaking 配合，将 lodash library 中的其余没有用到的导出去除。
+    // }),
   ]
 }}
